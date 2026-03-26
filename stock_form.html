@@ -40,15 +40,13 @@
         /* Universal Neutral Button Style for Light/Dark legibility */
         .choice-btn {
             flex: 1; 
-            /* Creates a faint shade based on current text color for universal legibility */
-            background-color: var(--tg-theme-text-color);
-            opacity: 0.12; 
+            background: rgba(var(--tg-theme-text-color-rgb), 0.12); /* Use text color with low opacity for neutral tone */
             border: 1px solid transparent; 
             border-radius: 8px; padding: 10px 2px; font-size: 12px;
             cursor: pointer; text-align: center; transition: all 0.2s;
-            color: var(--tg-theme-text-color); /* Native text ensures visibility against overlay */
+            color: var(--tg-theme-text-color); /* Native primary text color ensures contrast */
         }
-        /* Override opacity and text color when button is active (selected) */
+        /* Override opacity and colors when button is active (selected) */
         .choice-btn.active {
             opacity: 1;
             background: var(--tg-theme-button-color); /* Native main button color (blue/green) */
@@ -81,7 +79,6 @@
         const schema = [
             {
                 title: "ПРИВОЗ",
-                warning: "❗️немає у понеділок ❗️",
                 items: [
                     { name: "ЗЕЛЕНЬ", unit: "кг", options: ["0,5-1", "1-2", "2+"] },
                     { name: "КІНЗА", unit: "кг", options: ["0-0.1", "0.1-0,5", "0,5+"] },
@@ -140,7 +137,7 @@
                     { name: "Перец красный", unit: "г", options: ["0,1-0,2", "0,2-0,3", "0,3+"] },
                     { name: "Приправа для курицы", unit: "г", options: ["0,1-0,2", "0,2-0,3", "0,3+"] },
                     { name: "Перец молотый чёрный", unit: "г", options: ["0,1-0,1", "0,1-0,2", "0,2+"] },
-                    { name: "Приправа для креветок", unit: "г", options: ["0,01-0,02", "0,02-0,03", "0,03+"] }
+                    { name: "Приправа для креветок", unit: "г", options: ["0,010-0,020", "0,020-0,030", "0,030+"] }
                 ]
             },
             {
