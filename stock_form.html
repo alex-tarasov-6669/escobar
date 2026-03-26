@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Складські залишки Escobar</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        :root {
+            --tg-theme-bg-color: #efeff4;
+            --tg-theme-secondary-bg-color: #ffffff;
+            --tg-theme-text-color: #000000;
+            --tg-theme-button-color: #2481cc;
+            --tg-theme-button-text-color: #ffffff;
+            --tg-theme-hint-color: #999999;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--tg-theme-bg-color);
+            color: var(--tg-theme-text-color);
+            margin: 0; padding: 10px;
+        }
+        .section {
+            background: var(--tg-theme-secondary-bg-color);
+            border-radius: 12px; padding: 15px; margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        h2 { font-size: 14px; color: var(--tg-theme-button-color); text-transform: uppercase; margin-top: 0; border-bottom: 1px solid #eee; padding-bottom: 8px; margin-bottom: 12px; }
+        .item { margin-bottom: 15px; border-bottom: 1px solid #f5f5f5; padding-bottom: 10px; }
+        .item:last-child { border: none; }
+        .item-name { font-size: 15px; font-weight: 500; margin-bottom: 8px; display: block; }
+        .item-name span { color: var(--tg-theme-hint-color); font-weight: normal; font-size: 13px; }
+        .btn-group { display: flex; gap: 6px; justify-content: space-between; }
+        .choice-btn {
+            flex: 1; background: #f2f2f7; border: 1px solid #e5e5ea;
+            border-radius: 8px; padding: 10px 2px; font-size: 12px;
+            cursor: pointer; text-align: center; transition: all 0.2s;
+            color: var(--tg-theme-text-color);
+        }
+        .choice-btn.active {
+            background: var(--tg-theme-button-color);
+            color: var(--tg-theme-button-text-color);
+            border-color: var(--tg-theme-button-color);
+        }
+        .warning { color: #d32f2f; font-size: 12px; font-weight: bold; margin-bottom: 10px; display: block; }
+        .submit-btn {
+            width: 100%; background: var(--tg-theme-button-color); color: white;
+            border: none; border-radius: 12px; padding: 18px; font-size: 16px; font-weight: bold;
+            margin-top: 10px; margin-bottom: 40px; cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="form-container">
+        </div>
+
+    <button class="submit-btn" onclick="submitData()">ВВЕСТИ ЗАЛИШКИ</button>
+
+    <script>
+        let tg = window.Telegram.WebApp;
+        tg.expand();
+
+        const schema = [
+            {
+                title: "ПРИВОЗ",
+                warning: "❗️немає у понеділок ❗️",
+                items: [
+                    { name: "ЗЕЛЕНЬ", unit: "кг", options: ["0,5-1", "1-2", "2+"] },
+                    { name: "КІНЗА", unit: "кг", options: ["0-0.1", "0.1-0,5", "0,5+"] },
+                    { name: "Айсберг", unit: "шт", options: ["1-2", "2-3", "3+"] },
+                    { name: "Фіолетова цибуля", unit: "цибулина", options: ["0-1", "1-2", "2+"] },
+                    { name: "Помідор", unit: "кг", options: ["0-3", "3-5", "5+"] },
+                    { name: "Огірок", unit: "кг", options: ["0-2", "2-4", "4+"] },
+                    { name: "Капуста", unit: "шт", options: ["0-6", "6-10", "10+"] },
+                    { name: "Цибулька", unit: "кг", options: ["1-2", "3-5", "5+"] },
+                    { name: "Болгарский перчик", unit: "шт", options: ["2-3", "3-6", "6+"] },
+                    { name: "Часничок", unit: "кг", options: ["0,2-0,3", "0,3-0,5", "0,5+"] }
+                ]
+            },
+            {
+                title: "ОПТОВИЙ РИНОК",
+                items: [
+                    { name: "Сир Голандский", unit: "шт", options: ["1-2", "2-3", "3+"] },
+                    { name: "Аджика", unit: "шт", options: ["3-5", "5-8", "8+"] },
+                    { name: "Сир ФЕТА", unit: "шт", options: ["1-1,5", "1,5-2", "2+"] },
+                    { name: "Вилки одноразові", unit: "уп", options: ["5-10", "10-15", "15+"] },
+                    { name: "Упаковка для пиццы", unit: "уп", options: ["3-6", "6-9", "9+"] },
+                    { name: "Фольга (прижим)", unit: "рул", options: ["0-1", "1-1.3", "1.3+"] },
+                    { name: "Крафти (14х28) лопата", unit: "шт", options: ["10-20", "20-30", "30+"] },
+                    { name: "Крафты (бургер) Шаучак", unit: "шт", options: ["4-10", "10-20", "20+"] },
+                    { name: "Крафти (9х17) шаурма", unit: "шт", options: ["10-20", "20-40", "40+"] },
+                    { name: "Фасовка велика (Шаучак)", unit: "уп", options: ["0,5-1", "1-1", "1+"] },
+                    { name: "Пергамент", unit: "листі", options: ["10-15", "15-30", "30+"] },
+                    { name: "Миючий засіб", unit: "бут", options: ["0-0,5", "0,5-1", "1+"] },
+                    { name: "Мусорні пакети", unit: "рул", options: ["0,5-1", "1-1", "1+"] },
+                    { name: "Тряпки", unit: "шт", options: ["0-1", "2-3", "4+"] },
+                    { name: "Мочалки", unit: "шт", options: ["0-1", "2-3", "4+"] },
+                    { name: "Їжаки", unit: "шт", options: ["0-1", "2-3", "4+"] }
+                ]
+            },
+            {
+                title: "МЕТРО",
+                items: [
+                    { name: "Ананасы", unit: "б", options: ["1-3", "5-7", "7+"] },
+                    { name: "Кукурудза", unit: "б", options: ["1-2", "2-2", "2+"] },
+                    { name: "Грибы", unit: "б", options: ["1-2", "2-3", "3+"] },
+                    { name: "Маслини", unit: "б", options: ["1-2", "2-3", "2+"] },
+                    { name: "Яйця", unit: "шт", options: ["5-10", "10-20", "20+"] },
+                    { name: "Сосиски", unit: "шт", options: ["2-4", "4-8", "8+"] },
+                    { name: "Крем сир", unit: "відра", options: ["0,2-0,5", "0,5-1", "1+"] },
+                    { name: "Айран", unit: "б", options: ["0-2", "2-6", "6+"] },
+                    { name: "Авокадо", unit: "шт", options: ["2-4", "4-6", "6+"] },
+                    { name: "Сахар", unit: "п", options: ["0-1", "1-2", "2+"] },
+                    { name: "Сіль", unit: "уп", options: ["0,5-1", "1-2", "2+"] },
+                    { name: "Оцет", unit: "л", options: ["0-0,2", "0,2-0,5", "0,5+"] },
+                    { name: "УНАГІ СОУС", unit: "л", options: ["0,1-0,2", "0,2-0,3", "0,3+"] }
+                ]
+            },
+            {
+                title: "КИЇВСЬКИЙ РИНОК",
+                items: [
+                    { name: "Перец красный", unit: "г", options: ["0,1-0,2", "0,2-0,3", "0,3+"] },
+                    { name: "Приправа для курицы", unit: "г", options: ["0,1-0,2", "0,2-0,3", "0,3+"] },
+                    { name: "Перец молотый чёрный", unit: "г", options: ["0,1-0,1", "0,1-0,2", "0,2+"] },
+                    { name: "Приправа для креветок", unit: "г", options: ["0,01-0,02", "0,02-0,03", "0,03+"] }
+                ]
+            },
+            {
+                title: "М'ЯСО / ПОРЦІЇ",
+                items: [
+                    { name: "Курка", unit: "порцій", options: ["50-70", "70-100", "100+"] },
+                    { name: "Телятина", unit: "порцій", options: ["4-8", "8-10", "10+"] },
+                    { name: "Свинина", unit: "порцій", options: ["4-8", "8-10", "10+"] },
+                    { name: "ЛОСОСЬ", unit: "куски", options: ["1-1,5", "1,5-2", "2+"] },
+                    { name: "КРЕВЕТКА", unit: "порцій", options: ["5-10", "10-15", "15+"] }
+                ]
+            },
+            {
+                title: "НОВА ПОШТА / ЛАВАШ",
+                items: [
+                    { name: "Крафты бол. (винос)", unit: "шт", options: ["10-20", "20-40", "40+"] },
+                    { name: "Крафты Шаучак (винос)", unit: "шт", options: ["5-10", "10-15", "15+"] },
+                    { name: "Лаваш чорний", unit: "уп", options: ["0,5-1", "2-3", "3+"] },
+                    { name: "Лаваш Арабський", unit: "уп", options: ["2-6", "6-8", "8+"] },
+                    { name: "Бумага для чеков", unit: "рул", options: ["1-2", "2-3", "3+"] },
+                    { name: "Кефир", unit: "л", options: ["2-6", "6-10", "10+"] },
+                    { name: "Фольга термопакети", unit: "шт", options: ["0-30", "30-50", "50+"] }
+                ]
+            },
+            {
+                title: "КАНСКИЙ ФЕСТИВАЛЬ",
+                items: [
+                    { name: "Маринований огірок", unit: "кг", options: ["0,1-0,4", "0,4-0,6", "0,6+"] },
+                    { name: "Лаваш жовтий", unit: "уп", options: ["0,5-1", "1-2", "2+"] },
+                    { name: "Шаучак", unit: "шт", options: ["1-3", "3-5", "5+"] },
+                    { name: "Картошка різ", unit: "кг", options: ["1-2", "2-3", "3+"] },
+                    { name: "Морква корейська", unit: "кг", options: ["0,1-0,2", "0,2-0,3", "0,3+"] },
+                    { name: "Сулугуни", unit: "кг", options: ["1-2", "2-3", "3+"] },
+                    { name: "Салфетки", unit: "уп", options: ["1-2", "2-4", "4+"] },
+                    { name: "Перчатки одн.", unit: "уп", options: ["1-2", "2-4", "4+"] },
+                    { name: "Кетчуп", unit: "б", options: ["0,5-1", "1-1,5", "1,5+"] },
+                    { name: "Олія", unit: "л", options: ["5-10", "10-15", "15+"] }
+                ]
+            },
+            {
+                title: "РУЛОНИ / ПАКЕТИ",
+                items: [
+                    { name: "Фасовка", unit: "уп", options: ["1-2", "2-4", "4+"] },
+                    { name: "Пакеты двойка (видача)", unit: "уп", options: ["1-2", "2-3", "3+"] },
+                    { name: "Рулон бумаги", unit: "рул", options: ["1-1.5", "1.5-2", "2+"] },
+                    { name: "Перчатки чорні", unit: "уп", options: ["0,5-1", "1-2", "2+"] }
+                ]
+            },
+            {
+                title: "ВОДА",
+                items: [
+                    { name: "Кола 0,5", unit: "б", options: ["5-10", "10-15", "15+"] },
+                    { name: "Фанта 0,5", unit: "б", options: ["5-8", "8-12", "12+"] },
+                    { name: "Спрайт 0,5", unit: "б", options: ["5-8", "8-12", "12+"] },
+                    { name: "Біола чамбо", unit: "б", options: ["5-10", "10-15", "15+"] },
+                    { name: "Томатний", unit: "б", options: ["3-6", "6-9", "9+"] }
+                ]
+            }
+        ];
+
+        const container = document.getElementById('form-container');
+
+        schema.forEach(section => {
+            const secDiv = document.createElement('div');
+            secDiv.className = 'section';
+            let html = `<h2>${section.title}</h2>`;
+            if (section.warning) html += `<span class="warning">${section.warning}</span>`;
+            
+            section.items.forEach(item => {
+                html += `
+                    <div class="item" data-name="${item.name}">
+                        <span class="item-name">${item.name} <span>/ ${item.unit || ''}</span></span>
+                        <div class="btn-group">
+                            ${item.options.map(opt => `<button class="choice-btn" onclick="select(this)">${opt}</button>`).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+            secDiv.innerHTML = html;
+            container.appendChild(secDiv);
+        });
+
+        function select(btn) {
+            let group = btn.parentElement.querySelectorAll('.choice-btn');
+            group.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
+
+        function submitData() {
+            const results = {};
+            document.querySelectorAll('.item').forEach(item => {
+                const name = item.getAttribute('data-name');
+                const activeBtn = item.querySelector('.choice-btn.active');
+                results[name] = activeBtn ? activeBtn.innerText : "не вказано";
+            });
+            // Відправляємо дані в бот
+            tg.sendData(JSON.stringify(results));
+            tg.close();
+        }
+    </script>
+</body>
+</html>
