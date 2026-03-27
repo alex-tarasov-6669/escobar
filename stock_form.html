@@ -225,16 +225,28 @@
         }
 
         function submitData() {
-            const results = {};
-            document.querySelectorAll('.item').forEach(item => {
-                const name = item.getAttribute('data-name');
-                const activeBtn = item.querySelector('.choice-btn.active');
-                results[name] = activeBtn ? activeBtn.innerText : "не вказано";
-            });
-            // Відправляємо дані в бот
-            tg.sendData(JSON.stringify(results));
-            tg.close();
+    const results = {};
+    document.querySelectorAll('.item').forEach(item => {
+        const name = item.getAttribute('data-name');
+        const activeBtn = item.querySelector('.choice-btn.active');
+        
+        if (activeBtn) {
+            // Знаходимо індекс натиснутої кнопки в групі (0, 1 або 2)
+            const btns = Array.from(item.querySelectorAll('.choice-btn'));
+            const index = btns.indexOf(activeBtn);
+            
+            results[name] = {
+                v: activeBtn.innerText, // Текст (напр. "0,5-1")
+                s: index               // Статус для кольору (0, 1, 2)
+            };
+        } else {
+            results[name] = { v: "не вказано", s: -1 };
         }
+    });
+
+    tg.sendData(JSON.stringify(results));
+    tg.close();
+}
     </script>
 </body>
 </html>
