@@ -487,7 +487,7 @@
                         >
                         <div class="slider-value">${cfg.labelFormatter(cfg.min)}</div>
                     </div>
-                    <div class="slider-hint">0 = не вказано</div>
+                    <div class="slider-hint">0</div>
                 </div>
             `;
         }
@@ -531,14 +531,20 @@
         }
 
         function buildSliderPayload(item) {
-            const itemName = item.dataset.name;
-            const cfg = sliderConfigs[itemName];
-            const input = item.querySelector('.slider-input');
-            const numericValue = parseFloat(input.value);
+    const itemName = item.dataset.name;
+    const cfg = sliderConfigs[itemName];
+    const input = item.querySelector('.slider-input');
+    const numericValue = parseFloat(input.value);
 
-            if (!cfg || Number.isNaN(numericValue) || numericValue === 0) {
-                return { v: "не вказано", s: -1 };
-            }
+    if (!cfg || Number.isNaN(numericValue)) {
+        return { v: "не вказано", s: -1 };
+    }
+
+    return {
+        v: cfg.valueFormatter(numericValue),
+        s: cfg.statusResolver(numericValue)
+    };
+}
 
             return {
                 v: cfg.valueFormatter(numericValue),
