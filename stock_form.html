@@ -6,27 +6,277 @@
     <title>Залишки Escobar</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-    body { font-family: -apple-system, system-ui; background: var(--tg-theme-bg-color); color: var(--tg-theme-text-color); margin: 0; padding: 10px; }
-    .section { background: var(--tg-theme-secondary-bg-color); border-radius: 12px; padding: 15px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-    h2 { font-size: 14px; color: var(--tg-theme-button-color); text-transform: uppercase; margin: 0 0 12px 0; border-bottom: 1px solid rgba(128,128,128, 0.2); padding-bottom: 8px; }
-    .item { margin-bottom: 15px; border-bottom: 1px solid rgba(128,128,128, 0.1); padding-bottom: 10px; }
-    .item-name { font-size: 16px; font-weight: 600; margin-bottom: 8px; display: block; }
-    
-    /* Одиниці виміру: змінено color на червоний (#ff0000) */
-    .item-name span { color: #ff0000 !important; font-weight: 900 !important; font-size: 15px; margin-left: 5px; }
-    
-    .btn-group { display: flex; gap: 8px; justify-content: space-between; }
-    .choice-btn { flex: 1; background: rgba(128, 128, 128, 0.1); border: 1px solid rgba(128, 128, 128, 0.3); border-radius: 10px; padding: 12px 2px; font-size: 13px; cursor: pointer; color: var(--tg-theme-text-color); }
-    .choice-btn.active { background: var(--tg-theme-button-color) !important; color: var(--tg-theme-button-text-color) !important; border-color: var(--tg-theme-button-color); }
-    .submit-btn { width: 100%; background: var(--tg-theme-button-color); color: var(--tg-theme-button-text-color); border: none; border-radius: 12px; padding: 18px; font-size: 16px; font-weight: bold; margin-bottom: 40px; cursor: pointer; }
-</style>
+        body {
+            font-family: -apple-system, system-ui;
+            background: var(--tg-theme-bg-color);
+            color: var(--tg-theme-text-color);
+            margin: 0;
+            padding: 10px;
+        }
+
+        .section {
+            background: var(--tg-theme-secondary-bg-color);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            font-size: 14px;
+            color: var(--tg-theme-button-color);
+            text-transform: uppercase;
+            margin: 0 0 12px 0;
+            border-bottom: 1px solid rgba(128,128,128, 0.2);
+            padding-bottom: 8px;
+        }
+
+        .item {
+            margin-bottom: 15px;
+            border-bottom: 1px solid rgba(128,128,128, 0.1);
+            padding-bottom: 10px;
+        }
+
+        .item:last-child {
+            margin-bottom: 0;
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .item-name {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .item-name span {
+            color: #ff0000 !important;
+            font-weight: 900 !important;
+            font-size: 15px;
+            margin-left: 5px;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 8px;
+            justify-content: space-between;
+        }
+
+        .choice-btn {
+            flex: 1;
+            background: rgba(128, 128, 128, 0.1);
+            border: 1px solid rgba(128, 128, 128, 0.3);
+            border-radius: 10px;
+            padding: 12px 2px;
+            font-size: 13px;
+            cursor: pointer;
+            color: var(--tg-theme-text-color);
+        }
+
+        .choice-btn.active {
+            background: var(--tg-theme-button-color) !important;
+            color: var(--tg-theme-button-text-color) !important;
+            border-color: var(--tg-theme-button-color);
+        }
+
+        .slider-wrap {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .slider-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .slider-input {
+            flex: 1;
+            accent-color: var(--tg-theme-button-color);
+        }
+
+        .slider-value {
+            min-width: 78px;
+            text-align: right;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--tg-theme-button-color);
+        }
+
+        .slider-hint {
+            font-size: 12px;
+            opacity: 0.75;
+        }
+
+        .submit-btn {
+            width: 100%;
+            background: var(--tg-theme-button-color);
+            color: var(--tg-theme-button-text-color);
+            border: none;
+            border-radius: 12px;
+            padding: 18px;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 40px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
     <div id="form-container"></div>
     <button class="submit-btn" onclick="submitData()">ВВЕСТИ ЗАЛИШКИ</button>
+
     <script>
-        let tg = window.Telegram.WebApp; tg.expand();
-        // Всі категорії на місці, діапазони починаються з 0
+        let tg = window.Telegram.WebApp;
+        tg.expand();
+
+        const sliderConfigs = {
+            "Маринований огірок": {
+                type: "slider",
+                min: 0,
+                max: 1000,
+                step: 100,
+                displayUnit: "г",
+                valueFormatter: (value) => String(value),
+                labelFormatter: (value) => `${value} г`,
+                statusResolver: (value) => {
+                    const kg = value / 1000;
+                    if (kg < 0.4) return 0;
+                    if (kg < 0.6) return 1;
+                    return 2;
+                }
+            },
+            "Лаваш жовтий": {
+                type: "slider",
+                min: 0,
+                max: 3,
+                step: 1,
+                displayUnit: "уп",
+                valueFormatter: (value) => String(value),
+                labelFormatter: (value) => `${value} уп`,
+                statusResolver: (value) => {
+                    if (value < 1) return 0;
+                    if (value < 2) return 1;
+                    return 2;
+                }
+            },
+            "Шаучак": {
+                type: "slider",
+                min: 0,
+                max: 6,
+                step: 1,
+                displayUnit: "порц",
+                valueFormatter: (value) => String(value),
+                labelFormatter: (value) => `${value} порц`,
+                statusResolver: (value) => {
+                    if (value < 3) return 0;
+                    if (value < 5) return 1;
+                    return 2;
+                }
+            },
+            "Картошка різ": {
+                type: "slider",
+                min: 0,
+                max: 4,
+                step: 1,
+                displayUnit: "уп",
+                valueFormatter: (value) => String(value),
+                labelFormatter: (value) => `${value} уп`,
+                statusResolver: (value) => {
+                    if (value < 2) return 0;
+                    if (value < 3) return 1;
+                    return 2;
+                }
+            },
+            "Морква корейська": {
+                type: "slider",
+                min: 0,
+                max: 500,
+                step: 100,
+                displayUnit: "г",
+                valueFormatter: (value) => (value / 1000).toFixed(1).replace(".0", ""),
+                labelFormatter: (value) => `${value} г`,
+                statusResolver: (value) => {
+                    const kg = value / 1000;
+                    if (kg < 0.2) return 0;
+                    if (kg < 0.3) return 1;
+                    return 2;
+                }
+            },
+            "Сулугуни": {
+                type: "slider",
+                min: 0,
+                max: 4,
+                step: 1,
+                displayUnit: "уп",
+                valueFormatter: (value) => String(value),
+                labelFormatter: (value) => `${value} уп`,
+                statusResolver: (value) => {
+                    if (value < 2) return 0;
+                    if (value < 3) return 1;
+                    return 2;
+                }
+            },
+            "Салфетки": {
+                type: "slider",
+                min: 0,
+                max: 5,
+                step: 1,
+                displayUnit: "уп",
+                valueFormatter: (value) => String(value),
+                labelFormatter: (value) => `${value} уп`,
+                statusResolver: (value) => {
+                    if (value < 2) return 0;
+                    if (value < 4) return 1;
+                    return 2;
+                }
+            },
+            "Перчатки одн.": {
+                type: "slider",
+                min: 0,
+                max: 5,
+                step: 1,
+                displayUnit: "уп",
+                valueFormatter: (value) => String(value),
+                labelFormatter: (value) => `${value} уп`,
+                statusResolver: (value) => {
+                    if (value < 2) return 0;
+                    if (value < 4) return 1;
+                    return 2;
+                }
+            },
+            "Кетчуп": {
+                type: "slider",
+                min: 0,
+                max: 2,
+                step: 0.5,
+                displayUnit: "б",
+                valueFormatter: (value) => String(value).replace(".0", ""),
+                labelFormatter: (value) => `${String(value).replace(".0", "")} б`,
+                statusResolver: (value) => {
+                    if (value < 1) return 0;
+                    if (value < 1.5) return 1;
+                    return 2;
+                }
+            },
+            "Олія": {
+                type: "slider",
+                min: 0,
+                max: 20,
+                step: 2,
+                displayUnit: "л",
+                valueFormatter: (value) => String(value),
+                labelFormatter: (value) => `${value} л`,
+                statusResolver: (value) => {
+                    if (value < 10) return 0;
+                    if (value < 15) return 1;
+                    return 2;
+                }
+            }
+        };
+
         const schema = [
             { title: "ПРИВОЗ", items: [
                 { name: "ЗЕЛЕНЬ", unit: "кг", options: ["0-1", "1-2", "2+"] },
@@ -124,31 +374,108 @@
         ];
 
         const container = document.getElementById('form-container');
+
+        function renderButtons(item) {
+            return `
+                <div class="btn-group">
+                    ${item.options.map(opt => `<button type="button" class="choice-btn" onclick="sel(this)">${opt}</button>`).join('')}
+                </div>
+            `;
+        }
+
+        function renderSlider(item) {
+            const cfg = sliderConfigs[item.name];
+            return `
+                <div class="slider-wrap">
+                    <div class="slider-row">
+                        <input
+                            type="range"
+                            class="slider-input"
+                            min="${cfg.min}"
+                            max="${cfg.max}"
+                            step="${cfg.step}"
+                            value="${cfg.min}"
+                            oninput="sliderChanged(this)"
+                        >
+                        <div class="slider-value">${cfg.labelFormatter(cfg.min)}</div>
+                    </div>
+                    <div class="slider-hint">0 = не вказано</div>
+                </div>
+            `;
+        }
+
         schema.forEach(sec => {
-            let div = document.createElement('div'); div.className = 'section';
+            let div = document.createElement('div');
+            div.className = 'section';
+
             let html = `<h2>${sec.title}</h2>`;
             sec.items.forEach(it => {
-                html += `<div class="item" data-name="${it.name}"><span class="item-name">${it.name}<span> / ${it.unit}</span></span><div class="btn-group">` + 
-                it.options.map(opt => `<button class="choice-btn" onclick="sel(this)">${opt}</button>`).join('') + `</div></div>`;
+                const isSlider = sec.title === "КАНСКИЙ ФЕСТИВАЛЬ" && sliderConfigs[it.name];
+                html += `
+                    <div class="item" data-name="${it.name}" data-input-type="${isSlider ? 'slider' : 'buttons'}">
+                        <span class="item-name">${it.name}<span> / ${it.unit}</span></span>
+                        ${isSlider ? renderSlider(it) : renderButtons(it)}
+                    </div>
+                `;
             });
-            div.innerHTML = html; container.appendChild(div);
+
+            div.innerHTML = html;
+            container.appendChild(div);
         });
 
-        function sel(btn) { 
-            let group = btn.parentElement.querySelectorAll('.choice-btn');
+        function sel(btn) {
+            const group = btn.parentElement.querySelectorAll('.choice-btn');
             group.forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
         }
 
+        function sliderChanged(input) {
+            const item = input.closest('.item');
+            const itemName = item.dataset.name;
+            const cfg = sliderConfigs[itemName];
+            const numericValue = parseFloat(input.value);
+            const label = item.querySelector('.slider-value');
+            label.textContent = cfg.labelFormatter(numericValue);
+        }
+
+        function buildSliderPayload(item) {
+            const itemName = item.dataset.name;
+            const cfg = sliderConfigs[itemName];
+            const input = item.querySelector('.slider-input');
+            const numericValue = parseFloat(input.value);
+
+            if (!cfg || Number.isNaN(numericValue) || numericValue === 0) {
+                return { v: "не вказано", s: -1 };
+            }
+
+            return {
+                v: cfg.valueFormatter(numericValue),
+                s: cfg.statusResolver(numericValue)
+            };
+        }
+
+        function buildButtonsPayload(item) {
+            const act = item.querySelector('.active');
+            if (act) {
+                const btns = Array.from(item.querySelectorAll('.choice-btn'));
+                return { v: act.innerText, s: btns.indexOf(act) };
+            }
+            return { v: "не вказано", s: -1 };
+        }
+
         function submitData() {
-            let res = {}; document.querySelectorAll('.item').forEach(it => {
-                let act = it.querySelector('.active');
-                if(act) {
-                    let btns = Array.from(it.querySelectorAll('.choice-btn'));
-                    res[it.dataset.name] = { v: act.innerText, s: btns.indexOf(act) };
-                } else res[it.dataset.name] = { v: "не вказано", s: -1 };
+            let res = {};
+
+            document.querySelectorAll('.item').forEach(it => {
+                if (it.dataset.inputType === 'slider') {
+                    res[it.dataset.name] = buildSliderPayload(it);
+                } else {
+                    res[it.dataset.name] = buildButtonsPayload(it);
+                }
             });
-            tg.sendData(JSON.stringify(res)); tg.close();
+
+            tg.sendData(JSON.stringify(res));
+            tg.close();
         }
     </script>
 </body>
