@@ -19,6 +19,7 @@
             border-radius: 12px;
             padding: 15px;
             margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
 
         h2 {
@@ -26,10 +27,20 @@
             color: var(--tg-theme-button-color);
             text-transform: uppercase;
             margin: 0 0 12px 0;
+            border-bottom: 1px solid rgba(128,128,128, 0.2);
+            padding-bottom: 8px;
         }
 
         .item {
             margin-bottom: 15px;
+            border-bottom: 1px solid rgba(128,128,128, 0.1);
+            padding-bottom: 10px;
+        }
+
+        .item:last-child {
+            margin-bottom: 0;
+            border-bottom: none;
+            padding-bottom: 0;
         }
 
         .item-name {
@@ -40,27 +51,39 @@
         }
 
         .item-name span {
-            color: #ff0000;
-            font-weight: bold;
+            color: #ff0000 !important;
+            font-weight: 900 !important;
+            font-size: 15px;
             margin-left: 5px;
         }
 
         .btn-group {
             display: flex;
-            gap: 6px;
+            gap: 8px;
+            justify-content: space-between;
         }
 
         .choice-btn {
             flex: 1;
-            padding: 10px;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-            background: #eee;
+            background: rgba(128, 128, 128, 0.1);
+            border: 1px solid rgba(128, 128, 128, 0.3);
+            border-radius: 10px;
+            padding: 12px 2px;
+            font-size: 13px;
+            cursor: pointer;
+            color: var(--tg-theme-text-color);
         }
 
         .choice-btn.active {
-            background: var(--tg-theme-button-color);
-            color: white;
+            background: var(--tg-theme-button-color) !important;
+            color: var(--tg-theme-button-text-color) !important;
+            border-color: var(--tg-theme-button-color);
+        }
+
+        .slider-wrap {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
         }
 
         .slider-row {
@@ -71,125 +94,372 @@
 
         .slider-input {
             flex: 1;
+            accent-color: var(--tg-theme-button-color);
         }
 
         .slider-value {
-            min-width: 70px;
+            min-width: 84px;
             text-align: right;
-            font-weight: bold;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--tg-theme-button-color);
         }
 
         .slider-hint {
             font-size: 12px;
-            opacity: 0.7;
+            opacity: 0.75;
         }
 
         .submit-btn {
             width: 100%;
-            padding: 18px;
-            border-radius: 12px;
-            border: none;
             background: var(--tg-theme-button-color);
             color: var(--tg-theme-button-text-color);
+            border: none;
+            border-radius: 12px;
+            padding: 18px;
             font-size: 16px;
             font-weight: bold;
+            margin-bottom: 40px;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
+    <div id="form-container"></div>
+    <button class="submit-btn" onclick="submitData()">ВВЕСТИ ЗАЛИШКИ</button>
 
-<div id="form-container"></div>
-<button class="submit-btn" onclick="submitData()">ВВЕСТИ ЗАЛИШКИ</button>
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand();
 
-<script>
-let tg = window.Telegram.WebApp;
-tg.expand();
+        const sliderConfigs = {
+            "Сир Голандский": {
+                min: 0, max: 4, step: 1,
+                labelFormatter: v => `${v} шт`,
+                valueFormatter: v => String(v),
+                statusResolver: v => v < 2 ? 0 : v < 3 ? 1 : 2
+            },
+            "Аджика": {
+                min: 0, max: 9, step: 1,
+                labelFormatter: v => `${v} шт`,
+                valueFormatter: v => String(v),
+                statusResolver: v => v < 5 ? 0 : v < 8 ? 1 : 2
+            },
+            "Сир ФЕТА": {
+                min: 0, max: 3, step: 0.5,
+                labelFormatter: v => `${String(v).replace(".0", "")} шт`,
+                valueFormatter: v => String(v).replace(".0", ""),
+                statusResolver: v => v < 1.5 ? 0 : v < 2 ? 1 : 2
+            },
+            "Курка": {
+                min: 0, max: 100, step: 20,
+                labelFormatter: v => `${v} порц`,
+                valueFormatter: v => String(v),
+                statusResolver: v => v < 70 ? 0 : v < 100 ? 1 : 2
+            },
+            "Телятина": {
+                min: 0, max: 12, step: 2,
+                labelFormatter: v => `${v} порц`,
+                valueFormatter: v => String(v),
+                statusResolver: v => v < 8 ? 0 : v < 10 ? 1 : 2
+            },
+            "Свинина": {
+                min: 0, max: 12, step: 2,
+                labelFormatter: v => `${v} порц`,
+                valueFormatter: v => String(v),
+                statusResolver: v => v < 8 ? 0 : v < 10 ? 1 : 2
+            },
+            "ЛОСОСЬ": {
+                min: 0, max: 3, step: 1,
+                labelFormatter: v => `${v} кус`,
+                valueFormatter: v => String(v),
+                statusResolver: v => v < 1.5 ? 0 : v < 2 ? 1 : 2
+            },
+            "КРЕВЕТКА": {
+                min: 0, max: 16, step: 2,
+                labelFormatter: v => `${v} порц`,
+                valueFormatter: v => String(v),
+                statusResolver: v => v < 10 ? 0 : v < 15 ? 1 : 2
+            },
+            "Лаваш чорний": {
+                min: 0, max: 4, step: 1,
+                labelFormatter: v => `${v} уп`,
+                valueFormatter: v => String(v),
+                statusResolver: v => v < 2 ? 0 : v < 3 ? 1 : 2
+            },
 
-const sliderConfigs = {
-    "Сир Голандский": {min:0,max:4,step:1,label:v=>v+" шт", val:v=>String(v), s:v=>v<2?0:v<3?1:2},
-    "Аджика": {min:0,max:9,step:1,label:v=>v+" шт", val:v=>String(v), s:v=>v<5?0:v<8?1:2},
-    "Сир ФЕТА": {min:0,max:3,step:0.5,label:v=>v+" шт", val:v=>String(v), s:v=>v<1.5?0:v<2?1:2},
-
-    "Курка": {min:0,max:100,step:20,label:v=>v+" порц", val:v=>String(v), s:v=>v<70?0:v<100?1:2},
-    "Телятина": {min:0,max:12,step:2,label:v=>v+" порц", val:v=>String(v), s:v=>v<8?0:v<10?1:2},
-    "Свинина": {min:0,max:12,step:2,label:v=>v+" порц", val:v=>String(v), s:v=>v<8?0:v<10?1:2},
-    "ЛОСОСЬ": {min:0,max:3,step:1,label:v=>v+" кус", val:v=>String(v), s:v=>v<1.5?0:v<2?1:2},
-    "КРЕВЕТКА": {min:0,max:16,step:2,label:v=>v+" порц", val:v=>String(v), s:v=>v<10?0:v<15?1:2},
-
-    "Лаваш чорний": {min:0,max:4,step:1,label:v=>v+" уп", val:v=>String(v), s:v=>v<2?0:v<3?1:2},
-
-    // Канский фестиваль
-    "Маринований огірок": {min:0,max:1000,step:100,label:v=>v+" г", val:v=>String(v), s:v=>v<400?0:v<600?1:2},
-    "Лаваш жовтий": {min:0,max:3,step:1,label:v=>v+" уп", val:v=>String(v), s:v=>v<1?0:v<2?1:2},
-    "Шаучак": {min:0,max:6,step:1,label:v=>v+" порц", val:v=>String(v), s:v=>v<3?0:v<5?1:2},
-    "Картошка різ": {min:0,max:4,step:1,label:v=>v+" уп", val:v=>String(v), s:v=>v<2?0:v<3?1:2},
-    "Морква корейська": {min:0,max:500,step:100,label:v=>v+" г", val:v=>String(v/1000), s:v=>v<200?0:v<300?1:2},
-    "Сулугуни": {min:0,max:4,step:1,label:v=>v+" уп", val:v=>String(v), s:v=>v<2?0:v<3?1:2},
-    "Салфетки": {min:0,max:5,step:1,label:v=>v+" уп", val:v=>String(v), s:v=>v<2?0:v<4?1:2},
-    "Перчатки одн.": {min:0,max:5,step:1,label:v=>v+" уп", val:v=>String(v), s:v=>v<2?0:v<4?1:2},
-    "Кетчуп": {min:0,max:2,step:0.5,label:v=>v+" б", val:v=>String(v), s:v=>v<1?0:v<1.5?1:2},
-    "Олія": {min:0,max:20,step:2,label:v=>v+" л", val:v=>String(v), s:v=>v<10?0:v<15?1:2}
-};
-
-const schema = [
-    {title:"ОПТОВИЙ РИНОК", items:["Сир Голандский","Аджика","Сир ФЕТА"]},
-    {title:"М'ЯСО / ПОРЦІЇ", items:["Курка","Телятина","Свинина","ЛОСОСЬ","КРЕВЕТКА"]},
-    {title:"НОВА ПОШТА / ЛАВАШ", items:["Лаваш чорний"]},
-    {title:"КАНСКИЙ ФЕСТИВАЛЬ", items:["Маринований огірок","Лаваш жовтий","Шаучак","Картошка різ","Морква корейська","Сулугуни","Салфетки","Перчатки одн.","Кетчуп","Олія"]}
-];
-
-const container = document.getElementById('form-container');
-
-function renderSlider(name){
-    const c=sliderConfigs[name];
-    return `
-    <div class="slider-row">
-        <input type="range" class="slider-input" min="${c.min}" max="${c.max}" step="${c.step}" value="${c.min}" oninput="updateSlider(this)">
-        <div class="slider-value">${c.label(c.min)}</div>
-    </div>
-    <div class="slider-hint">0 = фактичний залишок 0</div>
-    `;
-}
-
-schema.forEach(sec=>{
-    let div=document.createElement('div');
-    div.className='section';
-    let html=`<h2>${sec.title}</h2>`;
-    sec.items.forEach(name=>{
-        html+=`
-        <div class="item" data-name="${name}">
-            <span class="item-name">${name}</span>
-            ${renderSlider(name)}
-        </div>`;
-    });
-    div.innerHTML=html;
-    container.appendChild(div);
-});
-
-function updateSlider(input){
-    const item=input.closest('.item');
-    const cfg=sliderConfigs[item.dataset.name];
-    const v=parseFloat(input.value);
-    item.querySelector('.slider-value').innerText=cfg.label(v);
-}
-
-function submitData(){
-    let res={};
-    document.querySelectorAll('.item').forEach(it=>{
-        const name=it.dataset.name;
-        const cfg=sliderConfigs[name];
-        const val=parseFloat(it.querySelector('.slider-input').value);
-
-        res[name]={
-            v: cfg.val(val),
-            s: cfg.s(val)
+            "Маринований огірок": {
+                min: 0, max: 1000, step: 100,
+                labelFormatter: v => `${v} г`,
+                valueFormatter: v => String(v),
+                statusResolver: v => {
+                    const kg = v / 1000;
+                    return kg < 0.4 ? 0 : kg < 0.6 ? 1 : 2;
+                }
+            },
+            "Лаваш жовтий": {
+                min: 0, max: 3, step: 1,
+                labelFormatter: v => `${v} уп`,
+                valueFormatter: v => String(v),
+                statusResolver: v => v < 1 ? 0 : v < 2 ? 1 : 2
+            },
+            "Шаучак": {
+                min: 0, max: 6, step: 1,
+                labelFormatter: v => `${v} порц`,
+                valueFormatter: v => String(v),
+                statusResolver: v => v < 3 ? 0 : v < 5 ? 1 : 2
+            },
+            "Картошка різ": {
+                min: 0, max: 4, step: 1,
+                labelFormatter: v => `${v} уп`,
+                valueFormatter: v => String(v),
+                statusResolver: v => v < 2 ? 0 : v < 3 ? 1 : 2
+            },
+            "Морква корейська": {
+                min: 0, max: 500, step: 100,
+                labelFormatter: v => `${v} г`,
+                valueFormatter: v => String(v / 1000).replace(/\.0$/, ""),
+                statusResolver: v => {
+                    const kg = v / 1000;
+                    return kg < 0.2 ? 0 : kg < 0.3 ? 1 : 2;
+                }
+            },
+            "Сулугуни": {
+                min: 0, max: 4, step: 1,
+                labelFormatter: v => `${v} уп`,
+                valueFormatter: v => String(v),
+                statusResolver: v => v < 2 ? 0 : v < 3 ? 1 : 2
+            },
+            "Салфетки": {
+                min: 0, max: 5, step: 1,
+                labelFormatter: v => `${v} уп`,
+                valueFormatter: v => String(v),
+                statusResolver: v => v < 2 ? 0 : v < 4 ? 1 : 2
+            },
+            "Перчатки одн.": {
+                min: 0, max: 5, step: 1,
+                labelFormatter: v => `${v} уп`,
+                valueFormatter: v => String(v),
+                statusResolver: v => v < 2 ? 0 : v < 4 ? 1 : 2
+            },
+            "Кетчуп": {
+                min: 0, max: 2, step: 0.5,
+                labelFormatter: v => `${String(v).replace(".0", "")} б`,
+                valueFormatter: v => String(v).replace(".0", ""),
+                statusResolver: v => v < 1 ? 0 : v < 1.5 ? 1 : 2
+            },
+            "Олія": {
+                min: 0, max: 20, step: 2,
+                labelFormatter: v => `${v} л`,
+                valueFormatter: v => String(v),
+                statusResolver: v => v < 10 ? 0 : v < 15 ? 1 : 2
+            }
         };
-    });
 
-    tg.sendData(JSON.stringify(res));
-    tg.close();
-}
-</script>
+        const schema = [
+            { title: "ПРИВОЗ", items: [
+                { name: "ЗЕЛЕНЬ", unit: "кг", options: ["0-1", "1-2", "2+"] },
+                { name: "КІНЗА", unit: "кг", options: ["0-0.1", "0.1-0,5", "0,5+"] },
+                { name: "Айсберг", unit: "шт", options: ["0-2", "2-3", "3+"] },
+                { name: "Фіолетова цибуля", unit: "шт", options: ["0-1", "1-2", "2+"] },
+                { name: "Помідор", unit: "кг", options: ["0-3", "3-5", "5+"] },
+                { name: "Огірок", unit: "кг", options: ["0-2", "2-4", "4+"] },
+                { name: "Капуста", unit: "шт", options: ["0-6", "6-10", "10+"] },
+                { name: "Цибулька", unit: "кг", options: ["0-2", "3-5", "5+"] },
+                { name: "Болгарский перчик", unit: "шт", options: ["0-3", "3-6", "6+"] },
+                { name: "Часничок", unit: "кг", options: ["0-0,3", "0,3-0,5", "0,5+"] }
+            ]},
+            { title: "ОПТОВИЙ РИНОК", items: [
+                { name: "Сир Голандский", unit: "шт", options: ["0-2", "2-3", "3+"] },
+                { name: "Аджика", unit: "шт", options: ["0-5", "5-8", "8+"] },
+                { name: "Сир ФЕТА", unit: "шт", options: ["0-1,5", "1,5-2", "2+"] },
+                { name: "Вилки одноразові", unit: "уп", options: ["0-10", "10-15", "15+"] },
+                { name: "Упаковка для пиццы", unit: "уп", options: ["0-6", "6-9", "9+"] },
+                { name: "Фольга (прижим)", unit: "рул", options: ["0-1", "1-1.3", "1.3+"] },
+                { name: "Крафти (14х28) лопата", unit: "шт", options: ["0-20", "20-30", "30+"] },
+                { name: "Крафты (бургер) Шаучак", unit: "шт", options: ["0-10", "10-20", "20+"] },
+                { name: "Крафти (9х17) шаурма", unit: "шт", options: ["0-20", "20-40", "40+"] },
+                { name: "Крафти стандартні для шаурми", unit: "шт", options: ["0-100", "100-200", "200+"] },
+                { name: "Фасовка велика (Шаучак)", unit: "уп", options: ["0-1", "1-1", "1+"] },
+                { name: "Пергамент", unit: "листі", options: ["0-15", "15-30", "30+"] },
+                { name: "Миючий засіб", unit: "бут", options: ["0-0,5", "0,5-1", "1+"] },
+                { name: "Мусорні пакети", unit: "рул", options: ["0-1", "1-1", "1+"] },
+                { name: "Тряпки", unit: "шт", options: ["0-1", "2-3", "4+"] },
+                { name: "Мочалки", unit: "шт", options: ["0-1", "2-3", "4+"] },
+                { name: "Їжаки", unit: "шт", options: ["0-1", "2-3", "4+"] }
+            ]},
+            { title: "МЕТРО", items: [
+                { name: "Ананасы", unit: "б", options: ["0-3", "5-7", "7+"] },
+                { name: "Кукурудза", unit: "б", options: ["0-2", "2-2", "2+"] },
+                { name: "Грибы", unit: "б", options: ["0-2", "2-3", "3+"] },
+                { name: "Маслини", unit: "б", options: ["0-2", "2-3", "2+"] },
+                { name: "Яйця", unit: "шт", options: ["0-10", "10-20", "20+"] },
+                { name: "Сосиски", unit: "шт", options: ["0-4", "4-8", "8+"] },
+                { name: "Крем сир", unit: "відра", options: ["0-0,5", "0,5-1", "1+"] },
+                { name: "Айран", unit: "б", options: ["0-2", "2-6", "6+"] },
+                { name: "Авокадо", unit: "шт", options: ["0-4", "4-6", "6+"] },
+                { name: "Сахар", unit: "п", options: ["0-1", "1-2", "2+"] },
+                { name: "Сіль", unit: "уп", options: ["0-1", "1-2", "2+"] },
+                { name: "Оцет", unit: "бут", options: ["0-2", "2-5", "5+"] },
+                { name: "УНАГІ СОУС", unit: "мл", options: ["0-200", "200-500", "500+"] }
+            ]},
+            { title: "КИЇВСЬКИЙ РИНОК", items: [
+                { name: "Перец красный", unit: "г", options: ["0-0,2", "0,2-0,3", "0,3+"] },
+                { name: "Приправа для курицы", unit: "г", options: ["0-0,2", "0,2-0,3", "0,3+"] },
+                { name: "Перец молотый чёрный", unit: "г", options: ["0-0,1", "0,1-0,2", "0,2+"] },
+                { name: "Приправа для креветок", unit: "г", options: ["0-0,02", "0,02-0,03", "0,03+"] }
+            ]},
+            { title: "М'ЯСО / ПОРЦІЇ", items: [
+                { name: "Курка", unit: "порцій", options: ["0-70", "70-100", "100+"] },
+                { name: "Телятина", unit: "порцій", options: ["0-8", "8-10", "10+"] },
+                { name: "Свинина", unit: "порцій", options: ["0-8", "8-10", "10+"] },
+                { name: "ЛОСОСЬ", unit: "куски", options: ["0-1,5", "1,5-2", "2+"] },
+                { name: "КРЕВЕТКА", unit: "порцій", options: ["0-10", "10-15", "15+"] }
+            ]},
+            { title: "НОВА ПОШТА / ЛАВАШ", items: [
+                { name: "Крафты бол. (винос)", unit: "шт", options: ["0-20", "20-40", "40+"] },
+                { name: "Крафты Шаучак (винос)", unit: "шт", options: ["0-10", "10-15", "15+"] },
+                { name: "Лаваш чорний", unit: "уп", options: ["0-1", "2-3", "3+"] },
+                { name: "Лаваш Арабський", unit: "уп", options: ["0-6", "6-8", "8+"] },
+                { name: "Бумага для чеков", unit: "рул", options: ["0-2", "2-3", "3+"] },
+                { name: "Кефир", unit: "л", options: ["0-6", "6-10", "10+"] },
+                { name: "Фольга термопакети", unit: "шт", options: ["0-30", "30-50", "50+"] }
+            ]},
+            { title: "КАНСКИЙ ФЕСТИВАЛЬ", items: [
+                { name: "Маринований огірок", unit: "кг", options: ["0-0,4", "0,4-0,6", "0,6+"] },
+                { name: "Лаваш жовтий", unit: "уп", options: ["0-1", "1-2", "2+"] },
+                { name: "Шаучак", unit: "шт", options: ["0-3", "3-5", "5+"] },
+                { name: "Картошка різ", unit: "кг", options: ["0-2", "2-3", "3+"] },
+                { name: "Морква корейська", unit: "кг", options: ["0-0,2", "0,2-0,3", "0,3+"] },
+                { name: "Сулугуни", unit: "кг", options: ["0-2", "2-3", "3+"] },
+                { name: "Салфетки", unit: "уп", options: ["0-2", "2-4", "4+"] },
+                { name: "Перчатки одн.", unit: "уп", options: ["0-2", "2-4", "4+"] },
+                { name: "Кетчуп", unit: "б", options: ["0-1", "1-1,5", "1,5+"] },
+                { name: "Олія", unit: "л", options: ["0-10", "10-15", "15+"] }
+            ]},
+            { title: "РУЛОНИ / ПАКЕТИ", items: [
+                { name: "Фасовка", unit: "уп", options: ["0-2", "2-4", "4+"] },
+                { name: "Пакеты двойка (видача)", unit: "уп", options: ["0-2", "2-3", "3+"] },
+                { name: "Рулон бумаги", unit: "рул", options: ["0-1.5", "1.5-2", "2+"] },
+                { name: "Перчатки чорні", unit: "уп", options: ["0-1", "1-2", "2+"] }
+            ]},
+            { title: "ВОДА", items: [
+                { name: "Кола 0,5", unit: "б", options: ["0-10", "10-15", "15+"] },
+                { name: "Фанта 0,5", unit: "б", options: ["0-8", "8-12", "12+"] },
+                { name: "Спрайт 0,5", unit: "б", options: ["0-8", "8-12", "12+"] },
+                { name: "Біола чамбо", unit: "б", options: ["0-10", "10-15", "15+"] },
+                { name: "Томатний", unit: "б", options: ["0-6", "6-9", "9+"] }
+            ]}
+        ];
 
+        const container = document.getElementById('form-container');
+
+        function renderButtons(item) {
+            return `
+                <div class="btn-group">
+                    ${item.options.map(opt => `<button type="button" class="choice-btn" onclick="sel(this)">${opt}</button>`).join('')}
+                </div>
+            `;
+        }
+
+        function renderSlider(item) {
+            const cfg = sliderConfigs[item.name];
+            return `
+                <div class="slider-wrap">
+                    <div class="slider-row">
+                        <input
+                            type="range"
+                            class="slider-input"
+                            min="${cfg.min}"
+                            max="${cfg.max}"
+                            step="${cfg.step}"
+                            value="${cfg.min}"
+                            oninput="sliderChanged(this)"
+                        >
+                        <div class="slider-value">${cfg.labelFormatter(cfg.min)}</div>
+                    </div>
+                    <div class="slider-hint">0 = фактичний залишок 0</div>
+                </div>
+            `;
+        }
+
+        function isSliderItem(itemName) {
+            return !!sliderConfigs[itemName];
+        }
+
+        schema.forEach(sec => {
+            const div = document.createElement('div');
+            div.className = 'section';
+
+            let html = `<h2>${sec.title}</h2>`;
+            sec.items.forEach(it => {
+                const isSlider = isSliderItem(it.name);
+                html += `
+                    <div class="item" data-name="${it.name}" data-input-type="${isSlider ? 'slider' : 'buttons'}">
+                        <span class="item-name">${it.name}<span> / ${it.unit}</span></span>
+                        ${isSlider ? renderSlider(it) : renderButtons(it)}
+                    </div>
+                `;
+            });
+
+            div.innerHTML = html;
+            container.appendChild(div);
+        });
+
+        function sel(btn) {
+            const group = btn.parentElement.querySelectorAll('.choice-btn');
+            group.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
+
+        function sliderChanged(input) {
+            const item = input.closest('.item');
+            const itemName = item.dataset.name;
+            const cfg = sliderConfigs[itemName];
+            const numericValue = parseFloat(input.value);
+            const label = item.querySelector('.slider-value');
+            label.textContent = cfg.labelFormatter(numericValue);
+        }
+
+        function buildSliderPayload(item) {
+            const itemName = item.dataset.name;
+            const cfg = sliderConfigs[itemName];
+            const input = item.querySelector('.slider-input');
+            const numericValue = parseFloat(input.value);
+
+            if (!cfg || Number.isNaN(numericValue)) {
+                return { v: "не вказано", s: -1 };
+            }
+
+            return {
+                v: cfg.valueFormatter(numericValue),
+                s: cfg.statusResolver(numericValue)
+            };
+        }
+
+        function buildButtonsPayload(item) {
+            const act = item.querySelector('.active');
+            if (act) {
+                const btns = Array.from(item.querySelectorAll('.choice-btn'));
+                return { v: act.innerText, s: btns.indexOf(act) };
+            }
+            return { v: "не вказано", s: -1 };
+        }
+
+        function submitData() {
+            const res = {};
+
+            document.querySelectorAll('.item').forEach(it => {
+                if (it.dataset.inputType === 'slider') {
+                    res[it.dataset.name] = buildSliderPayload(it);
+                } else {
+                    res[it.dataset.name] = buildButtonsPayload(it);
+                }
+            });
+
+            tg.sendData(JSON.stringify(res));
+            tg.close();
+        }
+    </script>
 </body>
 </html>
