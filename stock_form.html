@@ -133,14 +133,120 @@
         tg.expand();
 
         const sliderConfigs = {
+            "Сир Голандский": {
+                min: 0,
+                max: 4,
+                step: 1,
+                labelFormatter: (value) => `${value} шт`,
+                valueFormatter: (value) => String(value),
+                statusResolver: (value) => {
+                    if (value < 2) return 0;
+                    if (value < 3) return 1;
+                    return 2;
+                }
+            },
+            "Аджика": {
+                min: 0,
+                max: 9,
+                step: 1,
+                labelFormatter: (value) => `${value} шт`,
+                valueFormatter: (value) => String(value),
+                statusResolver: (value) => {
+                    if (value < 5) return 0;
+                    if (value < 8) return 1;
+                    return 2;
+                }
+            },
+            "Сир ФЕТА": {
+                min: 0,
+                max: 3,
+                step: 0.5,
+                labelFormatter: (value) => `${String(value).replace(".0", "")} шт`,
+                valueFormatter: (value) => String(value).replace(".0", ""),
+                statusResolver: (value) => {
+                    if (value < 1.5) return 0;
+                    if (value < 2) return 1;
+                    return 2;
+                }
+            },
+            "Курка": {
+                min: 0,
+                max: 100,
+                step: 20,
+                labelFormatter: (value) => `${value} порц`,
+                valueFormatter: (value) => String(value),
+                statusResolver: (value) => {
+                    if (value < 70) return 0;
+                    if (value < 100) return 1;
+                    return 2;
+                }
+            },
+            "Телятина": {
+                min: 0,
+                max: 12,
+                step: 2,
+                labelFormatter: (value) => `${value} порц`,
+                valueFormatter: (value) => String(value),
+                statusResolver: (value) => {
+                    if (value < 8) return 0;
+                    if (value < 10) return 1;
+                    return 2;
+                }
+            },
+            "Свинина": {
+                min: 0,
+                max: 12,
+                step: 2,
+                labelFormatter: (value) => `${value} порц`,
+                valueFormatter: (value) => String(value),
+                statusResolver: (value) => {
+                    if (value < 8) return 0;
+                    if (value < 10) return 1;
+                    return 2;
+                }
+            },
+            "ЛОСОСЬ": {
+                min: 0,
+                max: 3,
+                step: 1,
+                labelFormatter: (value) => `${value} кус`,
+                valueFormatter: (value) => String(value),
+                statusResolver: (value) => {
+                    if (value < 1.5) return 0;
+                    if (value < 2) return 1;
+                    return 2;
+                }
+            },
+            "КРЕВЕТКА": {
+                min: 0,
+                max: 16,
+                step: 2,
+                labelFormatter: (value) => `${value} порц`,
+                valueFormatter: (value) => String(value),
+                statusResolver: (value) => {
+                    if (value < 10) return 0;
+                    if (value < 15) return 1;
+                    return 2;
+                }
+            },
+            "Лаваш чорний": {
+                min: 0,
+                max: 4,
+                step: 1,
+                labelFormatter: (value) => `${value} уп`,
+                valueFormatter: (value) => String(value),
+                statusResolver: (value) => {
+                    if (value < 2) return 0;
+                    if (value < 3) return 1;
+                    return 2;
+                }
+            },
             "Маринований огірок": {
-                type: "slider",
                 min: 0,
                 max: 1000,
                 step: 100,
-                displayUnit: "г",
-                valueFormatter: (value) => String(value),
                 labelFormatter: (value) => `${value} г`,
+                valueFormatter: (value) => String(value),
                 statusResolver: (value) => {
                     const kg = value / 1000;
                     if (kg < 0.4) return 0;
@@ -149,13 +255,11 @@
                 }
             },
             "Лаваш жовтий": {
-                type: "slider",
                 min: 0,
                 max: 3,
                 step: 1,
-                displayUnit: "уп",
-                valueFormatter: (value) => String(value),
                 labelFormatter: (value) => `${value} уп`,
+                valueFormatter: (value) => String(value),
                 statusResolver: (value) => {
                     if (value < 1) return 0;
                     if (value < 2) return 1;
@@ -163,13 +267,11 @@
                 }
             },
             "Шаучак": {
-                type: "slider",
                 min: 0,
                 max: 6,
                 step: 1,
-                displayUnit: "порц",
-                valueFormatter: (value) => String(value),
                 labelFormatter: (value) => `${value} порц`,
+                valueFormatter: (value) => String(value),
                 statusResolver: (value) => {
                     if (value < 3) return 0;
                     if (value < 5) return 1;
@@ -177,13 +279,11 @@
                 }
             },
             "Картошка різ": {
-                type: "slider",
                 min: 0,
                 max: 4,
                 step: 1,
-                displayUnit: "уп",
-                valueFormatter: (value) => String(value),
                 labelFormatter: (value) => `${value} уп`,
+                valueFormatter: (value) => String(value),
                 statusResolver: (value) => {
                     if (value < 2) return 0;
                     if (value < 3) return 1;
@@ -191,13 +291,11 @@
                 }
             },
             "Морква корейська": {
-                type: "slider",
                 min: 0,
                 max: 500,
                 step: 100,
-                displayUnit: "г",
-                valueFormatter: (value) => (value / 1000).toFixed(1).replace(".0", ""),
                 labelFormatter: (value) => `${value} г`,
+                valueFormatter: (value) => (value / 1000).toFixed(1).replace(".0", ""),
                 statusResolver: (value) => {
                     const kg = value / 1000;
                     if (kg < 0.2) return 0;
@@ -206,13 +304,11 @@
                 }
             },
             "Сулугуни": {
-                type: "slider",
                 min: 0,
                 max: 4,
                 step: 1,
-                displayUnit: "уп",
-                valueFormatter: (value) => String(value),
                 labelFormatter: (value) => `${value} уп`,
+                valueFormatter: (value) => String(value),
                 statusResolver: (value) => {
                     if (value < 2) return 0;
                     if (value < 3) return 1;
@@ -220,13 +316,11 @@
                 }
             },
             "Салфетки": {
-                type: "slider",
                 min: 0,
                 max: 5,
                 step: 1,
-                displayUnit: "уп",
-                valueFormatter: (value) => String(value),
                 labelFormatter: (value) => `${value} уп`,
+                valueFormatter: (value) => String(value),
                 statusResolver: (value) => {
                     if (value < 2) return 0;
                     if (value < 4) return 1;
@@ -234,13 +328,11 @@
                 }
             },
             "Перчатки одн.": {
-                type: "slider",
                 min: 0,
                 max: 5,
                 step: 1,
-                displayUnit: "уп",
-                valueFormatter: (value) => String(value),
                 labelFormatter: (value) => `${value} уп`,
+                valueFormatter: (value) => String(value),
                 statusResolver: (value) => {
                     if (value < 2) return 0;
                     if (value < 4) return 1;
@@ -248,13 +340,11 @@
                 }
             },
             "Кетчуп": {
-                type: "slider",
                 min: 0,
                 max: 2,
                 step: 0.5,
-                displayUnit: "б",
-                valueFormatter: (value) => String(value).replace(".0", ""),
                 labelFormatter: (value) => `${String(value).replace(".0", "")} б`,
+                valueFormatter: (value) => String(value).replace(".0", ""),
                 statusResolver: (value) => {
                     if (value < 1) return 0;
                     if (value < 1.5) return 1;
@@ -262,13 +352,11 @@
                 }
             },
             "Олія": {
-                type: "slider",
                 min: 0,
                 max: 20,
                 step: 2,
-                displayUnit: "л",
-                valueFormatter: (value) => String(value),
                 labelFormatter: (value) => `${value} л`,
+                valueFormatter: (value) => String(value),
                 statusResolver: (value) => {
                     if (value < 10) return 0;
                     if (value < 15) return 1;
@@ -404,13 +492,17 @@
             `;
         }
 
+        function isSliderItem(itemName) {
+            return !!sliderConfigs[itemName];
+        }
+
         schema.forEach(sec => {
             let div = document.createElement('div');
             div.className = 'section';
 
             let html = `<h2>${sec.title}</h2>`;
             sec.items.forEach(it => {
-                const isSlider = sec.title === "КАНСКИЙ ФЕСТИВАЛЬ" && sliderConfigs[it.name];
+                const isSlider = isSliderItem(it.name);
                 html += `
                     <div class="item" data-name="${it.name}" data-input-type="${isSlider ? 'slider' : 'buttons'}">
                         <span class="item-name">${it.name}<span> / ${it.unit}</span></span>
@@ -464,7 +556,7 @@
         }
 
         function submitData() {
-            let res = {};
+            const res = {};
 
             document.querySelectorAll('.item').forEach(it => {
                 if (it.dataset.inputType === 'slider') {
