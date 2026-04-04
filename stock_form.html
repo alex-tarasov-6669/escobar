@@ -151,6 +151,133 @@
                 valueFormatter: v => String(v).replace(".0", ""),
                 statusResolver: v => v < 1.5 ? 0 : v < 2 ? 1 : 2
             },
+            "Вилки одноразові": {
+                min: 0, max: 15, step: 5,
+                labelFormatter: v => `${v} уп`,
+                valueFormatter: v => String(v),
+                statusResolver: v => v < 10 ? 0 : v < 15 ? 1 : 2
+            },
+            "Упаковка для пиццы": {
+                min: 0, max: 9, step: 1,
+                labelFormatter: v => `${v} уп`,
+                valueFormatter: v => String(v),
+                statusResolver: v => v < 6 ? 0 : v < 9 ? 1 : 2
+            },
+            "Фольга (прижим)": {
+                min: 0, max: 1.3, step: 0.1,
+                labelFormatter: v => `${String(Number(v.toFixed(1))).replace(".0", "")} рул`,
+                valueFormatter: v => String(Number(v.toFixed(1))).replace(".0", ""),
+                statusResolver: v => v < 1 ? 0 : v < 1.3 ? 1 : 2
+            },
+            "Крафти (14х28) лопата": {
+                min: 0, max: 30, step: 5,
+                labelFormatter: v => `${v} шт`,
+                valueFormatter: v => String(v),
+                statusResolver: v => v < 20 ? 0 : v < 30 ? 1 : 2
+            },
+            "Крафты (бургер) Шаучак": {
+                min: 0, max: 20, step: 5,
+                labelFormatter: v => `${v} шт`,
+                valueFormatter: v => String(v),
+                statusResolver: v => v < 10 ? 0 : v < 20 ? 1 : 2
+            },
+            "Крафти (9х17) шаурма": {
+                min: 0, max: 40, step: 10,
+                labelFormatter: v => `${v} шт`,
+                valueFormatter: v => String(v),
+                statusResolver: v => v < 20 ? 0 : v < 40 ? 1 : 2
+            },
+            "Крафти стандартні для шаурми": {
+                min: 0, max: 200, step: 20,
+                labelFormatter: v => `${v} шт`,
+                valueFormatter: v => String(v),
+                statusResolver: v => v < 100 ? 0 : v < 200 ? 1 : 2
+            },
+            "Фасовка велика (Шаучак)": {
+                min: 0, max: 1, step: 1,
+                labelFormatter: v => `${v} уп`,
+                valueFormatter: v => String(v),
+                statusResolver: v => v < 1 ? 0 : v < 1.1 ? 1 : 2
+            },
+            "Пергамент": {
+                min: 0, max: 30, step: 5,
+                labelFormatter: v => `${v} листі`,
+                valueFormatter: v => String(v),
+                statusResolver: v => v < 15 ? 0 : v < 30 ? 1 : 2
+            },
+            "Миючий засіб": {
+                min: 0, max: 1, step: 0.5,
+                labelFormatter: v => `${String(v).replace(".0", "")} бут`,
+                valueFormatter: v => String(v).replace(".0", ""),
+                statusResolver: v => v < 0.5 ? 0 : v < 1 ? 1 : 2
+            },
+            "Мусорні пакети": {
+                min: 0, max: 1, step: 1,
+                labelFormatter: v => `${v} рул`,
+                valueFormatter: v => String(v),
+                statusResolver: v => v < 1 ? 0 : v < 1.1 ? 1 : 2
+            },
+            "Тряпки": {
+                min: 0, max: 4, step: 1,
+                labelFormatter: v => `${v} шт`,
+                valueFormatter: v => String(v),
+                statusResolver: v => v < 2 ? 0 : v < 4 ? 1 : 2
+            },
+            "Мочалки": {
+                min: 0, max: 4, step: 1,
+                labelFormatter: v => `${v} шт`,
+                valueFormatter: v => String(v),
+                statusResolver: v => v < 2 ? 0 : v < 4 ? 1 : 2
+            },
+            "Їжаки": {
+                min: 0, max: 4, step: 1,
+                labelFormatter: v => `${v} шт`,
+                valueFormatter: v => String(v),
+                statusResolver: v => v < 2 ? 0 : v < 4 ? 1 : 2
+            },
+            "Фасовка": {
+                min: 0, max: 4, step: 1,
+                labelFormatter: v => `${v} уп`,
+                valueFormatter: v => String(v),
+                statusResolver: v => v < 2 ? 0 : v < 4 ? 1 : 2
+            },
+            "Пакеты двойка (видача)": {
+                min: 0, max: 3, step: 1,
+                labelFormatter: v => `${v} уп`,
+                valueFormatter: v => String(v),
+                statusResolver: v => v < 2 ? 0 : v < 3 ? 1 : 2
+            },
+            "Рулон бумаги": {
+                min: 0, max: 2, step: 0.5,
+                labelFormatter: v => `${String(v).replace(".0", "")} рул`,
+                valueFormatter: v => String(v).replace(".0", ""),
+                statusResolver: v => v < 1.5 ? 0 : v < 2 ? 1 : 2
+            },
+            "Перчатки чорні - S": {
+                min: 0, max: 2, step: 1,
+                labelFormatter: v => `${v} уп`,
+                valueFormatter: v => String(v),
+                statusResolver: v => v < 1 ? 0 : v < 2 ? 1 : 2
+            },
+            "Перчатки чорні - M": {
+                min: 0, max: 2, step: 1,
+                labelFormatter: v => `${v} уп`,
+                valueFormatter: v => String(v),
+                statusResolver: v => v < 1 ? 0 : v < 2 ? 1 : 2
+            },
+            "Перчатки чорні - L": {
+                min: 0, max: 2, step: 1,
+                labelFormatter: v => `${v} уп`,
+                valueFormatter: v => String(v),
+                statusResolver: v => v < 1 ? 0 : v < 2 ? 1 : 2
+            },
+            "Перчатки чорні - XL": {
+                min: 0, max: 2, step: 1,
+                labelFormatter: v => `${v} уп`,
+                valueFormatter: v => String(v),
+                statusResolver: v => v < 1 ? 0 : v < 2 ? 1 : 2
+            },
+
             "Курка": {
                 min: 0, max: 100, step: 20,
                 labelFormatter: v => `${v} порц`,
@@ -269,7 +396,7 @@
                 { name: "Болгарский перчик", unit: "шт", options: ["0-3", "3-6", "6+"] },
                 { name: "Часничок", unit: "кг", options: ["0-0,3", "0,3-0,5", "0,5+"] }
             ]},
-            { title: "ОПТОВИЙ РИНОК", items: [
+            { title: "ОПТОВИЙ РИНОК / РУЛОНИ", items: [
                 { name: "Сир Голандский", unit: "шт", options: ["0-2", "2-3", "3+"] },
                 { name: "Аджика", unit: "шт", options: ["0-5", "5-8", "8+"] },
                 { name: "Сир ФЕТА", unit: "шт", options: ["0-1,5", "1,5-2", "2+"] },
@@ -286,7 +413,14 @@
                 { name: "Мусорні пакети", unit: "рул", options: ["0-1", "1-1", "1+"] },
                 { name: "Тряпки", unit: "шт", options: ["0-1", "2-3", "4+"] },
                 { name: "Мочалки", unit: "шт", options: ["0-1", "2-3", "4+"] },
-                { name: "Їжаки", unit: "шт", options: ["0-1", "2-3", "4+"] }
+                { name: "Їжаки", unit: "шт", options: ["0-1", "2-3", "4+"] },
+                { name: "Фасовка", unit: "уп", options: ["0-2", "2-4", "4+"] },
+                { name: "Пакеты двойка (видача)", unit: "уп", options: ["0-2", "2-3", "3+"] },
+                { name: "Рулон бумаги", unit: "рул", options: ["0-1.5", "1.5-2", "2+"] },
+                { name: "Перчатки чорні - S", unit: "уп", options: ["0-1", "1-2", "2+"] },
+                { name: "Перчатки чорні - M", unit: "уп", options: ["0-1", "1-2", "2+"] },
+                { name: "Перчатки чорні - L", unit: "уп", options: ["0-1", "1-2", "2+"] },
+                { name: "Перчатки чорні - XL", unit: "уп", options: ["0-1", "1-2", "2+"] }
             ]},
             { title: "МЕТРО", items: [
                 { name: "Ананасы", unit: "б", options: ["0-3", "5-7", "7+"] },
@@ -336,12 +470,6 @@
                 { name: "Перчатки одн.", unit: "уп", options: ["0-2", "2-4", "4+"] },
                 { name: "Кетчуп", unit: "б", options: ["0-1", "1-1,5", "1,5+"] },
                 { name: "Олія", unit: "л", options: ["0-10", "10-15", "15+"] }
-            ]},
-            { title: "РУЛОНИ / ПАКЕТИ", items: [
-                { name: "Фасовка", unit: "уп", options: ["0-2", "2-4", "4+"] },
-                { name: "Пакеты двойка (видача)", unit: "уп", options: ["0-2", "2-3", "3+"] },
-                { name: "Рулон бумаги", unit: "рул", options: ["0-1.5", "1.5-2", "2+"] },
-                { name: "Перчатки чорні", unit: "уп", options: ["0-1", "1-2", "2+"] }
             ]},
             { title: "ВОДА", items: [
                 { name: "Кола 0,5", unit: "б", options: ["0-10", "10-15", "15+"] },
