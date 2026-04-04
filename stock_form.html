@@ -308,6 +308,12 @@
                 valueFormatter: v => String(v),
                 statusResolver: v => v < 10 ? 0 : v < 15 ? 1 : 2
             },
+            "КРЕВЕТКА (замороз)": {
+                min: 0, max: 10, step: 1,
+                labelFormatter: v => `${v} уп`,
+                valueFormatter: v => String(v),
+                statusResolver: v => v < 3 ? 0 : v < 6 ? 1 : 2
+            },
             "Лаваш чорний": {
                 min: 0, max: 4, step: 1,
                 labelFormatter: v => `${v} уп`,
@@ -448,7 +454,8 @@
                 { name: "Телятина", unit: "порцій", options: ["0-8", "8-10", "10+"] },
                 { name: "Свинина", unit: "порцій", options: ["0-8", "8-10", "10+"] },
                 { name: "ЛОСОСЬ", unit: "куски", options: ["0-1,5", "1,5-2", "2+"] },
-                { name: "КРЕВЕТКА", unit: "порцій", options: ["0-10", "10-15", "15+"] }
+                { name: "КРЕВЕТКА", unit: "порцій", options: ["0-10", "10-15", "15+"] },
+                { name: "КРЕВЕТКА (замороз)", unit: "уп", options: ["0-2", "3-6", "6+"] }
             ]},
             { title: "НОВА ПОШТА / ЛАВАШ", items: [
                 { name: "Крафты бол. (винос)", unit: "шт", options: ["0-20", "20-40", "40+"] },
