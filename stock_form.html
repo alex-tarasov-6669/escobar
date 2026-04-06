@@ -152,7 +152,7 @@
                 statusResolver: v => v < 1.5 ? 0 : v < 2 ? 1 : 2
             },
             "Вилки одноразові": {
-                min: 0, max: 15, step: 5,
+                min: 0, max: 15, step: 1,
                 labelFormatter: v => `${v} уп`,
                 valueFormatter: v => String(v),
                 statusResolver: v => v < 10 ? 0 : v < 15 ? 1 : 2
@@ -212,10 +212,10 @@
                 statusResolver: v => v < 0.5 ? 0 : v < 1 ? 1 : 2
             },
             "Мусорні пакети": {
-                min: 0, max: 1, step: 1,
+                min: 0, max: 4, step: 1,
                 labelFormatter: v => `${v} рул`,
                 valueFormatter: v => String(v),
-                statusResolver: v => v < 1 ? 0 : v < 1.1 ? 1 : 2
+                statusResolver: v => v < 2 ? 0 : v < 4 ? 1 : 2
             },
             "Тряпки": {
                 min: 0, max: 4, step: 1,
@@ -416,7 +416,7 @@
                 { name: "Фасовка велика (Шаучак)", unit: "уп", options: ["0-1", "1-1", "1+"] },
                 { name: "Пергамент", unit: "листі", options: ["0-15", "15-30", "30+"] },
                 { name: "Миючий засіб", unit: "бут", options: ["0-0,5", "0,5-1", "1+"] },
-                { name: "Мусорні пакети", unit: "рул", options: ["0-1", "1-1", "1+"] },
+                { name: "Мусорні пакети", unit: "рул", options: ["0-1", "2-3", "4"] },
                 { name: "Тряпки", unit: "шт", options: ["0-1", "2-3", "4+"] },
                 { name: "Мочалки", unit: "шт", options: ["0-1", "2-3", "4+"] },
                 { name: "Їжаки", unit: "шт", options: ["0-1", "2-3", "4+"] },
