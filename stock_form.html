@@ -415,6 +415,13 @@
                 labelFormatter: v => `${v} л`,
                 valueFormatter: v => String(v),
                 statusResolver: v => v < 10 ? 0 : v < 15 ? 1 : 2
+            },
+            "Айран КФ": {
+                min: 0, max: 10, step: 1,
+                labelFormatter: v => `${v} бут`,
+                valueFormatter: v => String(v),
+                rangeHint: "Зони: 0-3 / 4-6 / 6+",
+                statusResolver: v => v < 4 ? 0 : v < 6 ? 1 : 2
             }
         };
 
@@ -468,7 +475,7 @@
                 { name: "Яйця", unit: "шт", options: ["0-10", "10-20", "20+"] },
                 { name: "Сосиски", unit: "шт", options: ["0-4", "4-8", "8+"] },
                 { name: "Крем сир", unit: "відра", options: ["0-0,5", "0,5-1", "1+"] },
-                { name: "Айран", unit: "б", options: ["0-2", "2-6", "6+"] },
+                { name: "Айран яготинський", unit: "б", options: ["0-2", "2-6", "6+"] },
                 { name: "Авокадо", unit: "шт", options: ["0-4", "4-6", "6+"] },
                 { name: "Сахар", unit: "п", options: ["0-1", "1-2", "2+"] },
                 { name: "Сіль", unit: "уп", options: ["0-1", "1-2", "2+"] },
@@ -510,7 +517,8 @@
                 { name: "Салфетки", unit: "уп", options: ["0-2", "2-4", "4+"] },
                 { name: "Перчатки одн.", unit: "уп", options: ["0-2", "2-4", "4+"] },
                 { name: "Кетчуп", unit: "б", options: ["0-1", "1-1,5", "1,5+"] },
-                { name: "Олія", unit: "л", options: ["0-10", "10-15", "15+"] }
+                { name: "Олія", unit: "л", options: ["0-10", "10-15", "15+"] },
+                { name: "Айран КФ", unit: "бут", options: ["0-3", "4-6", "6+"] }
             ]},
             { title: "ВОДА", items: [
                 { name: "Кола 0,5", unit: "б", options: ["0-10", "10-15", "15+"] },
@@ -538,7 +546,7 @@
         }
 
         function renderSlider(item) {
-            const cfg = sliderConfigs[item.name];
+            const cfg = sliderConfigs[item.key || item.name];
             return `
                 <div class="slider-wrap">
                     <div class="slider-row">
@@ -584,9 +592,10 @@
 
             let html = `<h2>${sec.title}</h2>`;
             sec.items.forEach(it => {
-                const isSlider = isSliderItem(it.name);
+                const itemKey = it.key || it.name;
+                const isSlider = isSliderItem(itemKey);
                 html += `
-                    <div class="item" data-name="${it.name}" data-input-type="${isSlider ? 'slider' : 'buttons'}">
+                    <div class="item" data-name="${itemKey}" data-input-type="${isSlider ? 'slider' : 'buttons'}">
                         <span class="item-name">${it.name}<span> / ${it.unit}</span></span>
                         ${isSlider ? renderSlider(it) : renderButtons(it)}
                     </div>
