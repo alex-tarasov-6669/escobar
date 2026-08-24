@@ -399,10 +399,11 @@
                 statusResolver: v => v < 2 ? 0 : v < 4 ? 1 : 2
             },
             "Перчатки одн.": {
-                min: 0, max: 5, step: 1,
+                min: 0, max: 10, step: 1,
                 labelFormatter: v => `${v} уп`,
                 valueFormatter: v => String(v),
-                statusResolver: v => v < 2 ? 0 : v < 4 ? 1 : 2
+                rangeHint: "Зони: 1-4 / 5-7 / 8+",
+                statusResolver: v => v < 5 ? 0 : v < 8 ? 1 : 2
             },
             "Кетчуп": {
                 min: 0, max: 2, step: 0.5,
@@ -515,7 +516,7 @@
                 { name: "Морква корейська", unit: "кг", options: ["0-0,2", "0,2-0,3", "0,3+"] },
                 { name: "Сулугуни", unit: "кг", options: ["0-2", "2-3", "3+"] },
                 { name: "Салфетки", unit: "уп", options: ["0-2", "2-4", "4+"] },
-                { name: "Перчатки одн.", unit: "уп", options: ["0-2", "2-4", "4+"] },
+                { name: "Перчатки одн.", unit: "уп", options: ["1-4", "5-7", "8+"] },
                 { name: "Кетчуп", unit: "б", options: ["0-1", "1-1,5", "1,5+"] },
                 { name: "Олія", unit: "л", options: ["0-10", "10-15", "15+"] },
                 { name: "Айран КФ", unit: "бут", options: ["0-3", "4-6", "6+"] }
