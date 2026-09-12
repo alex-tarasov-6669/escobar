@@ -248,10 +248,18 @@
                 valueFormatter: v => String(v),
                 statusResolver: v => v < 2 ? 0 : v < 4 ? 1 : 2
             },
-            "Пакеты двойка (видача)": {
+            "Пакеты двойка (рожева майка)": {
                 min: 0, max: 3, step: 1,
                 labelFormatter: v => `${v} уп`,
                 valueFormatter: v => String(v),
+                rangeHint: "Зони: 1-2 / 2-3 / 3+",
+                statusResolver: v => v < 2 ? 0 : v < 3 ? 1 : 2
+            },
+            "Пакеты двойка на видачу (прозора майка)": {
+                min: 0, max: 3, step: 1,
+                labelFormatter: v => `${v} уп`,
+                valueFormatter: v => String(v),
+                rangeHint: "Зони: 1-2 / 2-3 / 3+",
                 statusResolver: v => v < 2 ? 0 : v < 3 ? 1 : 2
             },
             "Рулон бумаги": {
@@ -458,7 +466,8 @@
                 { name: "Мочалки", unit: "шт", options: ["0-1", "2-3", "4+"] },
                 { name: "Їжаки", unit: "шт", options: ["0-1", "2-3", "4+"] },
                 { name: "Фасовка", unit: "уп", options: ["0-2", "2-4", "4+"] },
-                { name: "Пакеты двойка (видача)", unit: "уп", options: ["0-2", "2-3", "3+"] },
+                { name: "Пакеты двойка (рожева майка)", unit: "уп", options: ["1-2", "2-3", "3+"] },
+                { name: "Пакеты двойка на видачу (прозора майка)", unit: "уп", options: ["1-2", "2-3", "3+"] },
                 { name: "Рулон бумаги", unit: "рул", options: ["0-1", "2-3", "4+"] },
                 { name: "Перчатки чорні - S", unit: "уп", options: ["0-1", "1-2", "2+"] },
                 { name: "Перчатки чорні - M", unit: "уп", options: ["0-1", "1-2", "2+"] },
