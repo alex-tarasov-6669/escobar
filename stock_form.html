@@ -315,6 +315,49 @@
                 statusResolver: v => v < 1 ? 0 : v < 3 ? 1 : v < 5 ? 2 : 3
             },
 
+            "Лаваш Арабський": {
+                min: 0, max: 60, step: 1,
+                labelFormatter: v => `${v} уп`,
+                valueFormatter: v => String(v),
+                rangeHint: "Зони: 0-6 / 6-8 / 8+",
+                statusResolver: v => v < 6 ? 0 : v < 8 ? 1 : 2
+            },
+            "Упаковка для ребер вузька": {
+                min: 0, max: 40, step: 1,
+                labelFormatter: v => v >= 40 ? "40+ шт" : `${v} шт`,
+                valueFormatter: v => String(v),
+                rangeHint: "Зони: 0-10 / 10-20 / 30-40 / 40+",
+                statusResolver: v => v < 10 ? 0 : v < 30 ? 1 : v < 40 ? 2 : 3
+            },
+            "Упаковка для ребер широка": {
+                min: 0, max: 40, step: 1,
+                labelFormatter: v => v >= 40 ? "40+ шт" : `${v} шт`,
+                valueFormatter: v => String(v),
+                rangeHint: "Зони: 0-10 / 10-20 / 30-40 / 40+",
+                statusResolver: v => v < 10 ? 0 : v < 30 ? 1 : v < 40 ? 2 : 3
+            },
+            "Фольга для ребер": {
+                min: 0, max: 3, step: 0.5,
+                labelFormatter: v => v >= 3 ? "3+ рул" : `${String(Number(v.toFixed(1))).replace(".0", "")} рул`,
+                valueFormatter: v => String(Number(v.toFixed(1))).replace(".0", ""),
+                rangeHint: "Зони: 0-1 / 1-1,5 / 2-2,5 / 3+",
+                statusResolver: v => v < 1 ? 0 : v < 2 ? 1 : v < 3 ? 2 : 3
+            },
+            "Лодочка для ребер": {
+                min: 0, max: 40, step: 1,
+                labelFormatter: v => v >= 40 ? "40+ шт" : `${v} шт`,
+                valueFormatter: v => String(v),
+                rangeHint: "Зони: 0-10 / 10-20 / 30-40 / 40+",
+                statusResolver: v => v < 10 ? 0 : v < 30 ? 1 : v < 40 ? 2 : 3
+            },
+            "Соуснички": {
+                min: 0, max: 30, step: 1,
+                labelFormatter: v => v >= 30 ? "30+ шт" : `${v} шт`,
+                valueFormatter: v => String(v),
+                rangeHint: "Зони: 0-10 / 10-20 / 20-30 / 30+",
+                statusResolver: v => v < 10 ? 0 : v < 20 ? 1 : v < 30 ? 2 : 3
+            },
+
             "Курка": {
                 min: 0, max: 150, step: 20,
                 labelFormatter: v => `${v} порц`,
@@ -475,7 +518,12 @@
                 { name: "Перчатки чорні - XL", unit: "уп", options: ["0-1", "1-2", "2+"] },
                 { name: "Фасовка 18/4/35", unit: "уп", options: ["0-1", "1-2", "2-4"] },
                 { name: "Серветки зелені", unit: "уп", options: ["0-1", "1-2", "2-4"] },
-                { name: "Туалетний папір", unit: "уп", options: ["0-1", "1-3", "3-4", "5+"] }
+                { name: "Туалетний папір", unit: "уп", options: ["0-1", "1-3", "3-4", "5+"] },
+                { name: "Упаковка для ребер вузька", unit: "шт", options: ["0-10", "10-20", "30-40", "40+"] },
+                { name: "Упаковка для ребер широка", unit: "шт", options: ["0-10", "10-20", "30-40", "40+"] },
+                { name: "Фольга для ребер", unit: "рул", options: ["0-1", "1-1,5", "2-2,5", "3+"] },
+                { name: "Лодочка для ребер", unit: "шт", options: ["0-10", "10-20", "30-40", "40+"] },
+                { name: "Соуснички", unit: "шт", options: ["0-10", "10-20", "20-30", "30+"] }
             ]},
             { title: "МЕТРО", items: [
                 { name: "Ананасы", unit: "б", options: ["0-3", "5-7", "7+"] },
@@ -490,7 +538,9 @@
                 { name: "Сахар", unit: "п", options: ["0-1", "1-2", "2+"] },
                 { name: "Сіль", unit: "уп", options: ["0-1", "1-2", "2+"] },
                 { name: "Оцет", unit: "бут", options: ["0-2", "2-5", "5+"] },
-                { name: "УНАГІ СОУС", unit: "мл", options: ["0-200", "200-500", "500+"] }
+                { name: "УНАГІ СОУС", unit: "мл", options: ["0-200", "200-500", "500+"] },
+                { name: "Приправа ребра", unit: "уп", options: ["0-5", "5-10", "10-15", "15-25", "25+"] },
+                { name: "Соус bbq", unit: "літр", options: ["1-2", "2-5", "5+"] }
             ]},
             { title: "КИЇВСЬКИЙ РИНОК", items: [
                 { name: "Перец красный", unit: "г", options: ["0-0,2", "0,2-0,3", "0,3+"] },
@@ -504,7 +554,8 @@
                 { name: "Свинина", unit: "порцій", options: ["0-8", "8-10", "10+"] },
                 { name: "ЛОСОСЬ", unit: "куски", options: ["0-1,5", "1,5-2", "2+"] },
                 { name: "КРЕВЕТКА", unit: "порцій", options: ["0-10", "10-15", "15+"] },
-                { name: "КРЕВЕТКА (замороз)", unit: "уп", options: ["0-2", "3-6", "6+"] }
+                { name: "КРЕВЕТКА (замороз)", unit: "уп", options: ["0-2", "3-6", "6+"] },
+                { name: "Ребра", unit: "", options: ["0-4", "5-10", "10+"] }
             ]},
             { title: "НОВА ПОШТА / ЛАВАШ", items: [
                 { name: "Крафты бол. (винос)", unit: "шт", options: ["0-20", "20-40", "40+"] },
@@ -604,9 +655,10 @@
             sec.items.forEach(it => {
                 const itemKey = it.key || it.name;
                 const isSlider = isSliderItem(itemKey);
+                const unitHtml = it.unit ? `<span> / ${it.unit}</span>` : "";
                 html += `
                     <div class="item" data-name="${itemKey}" data-input-type="${isSlider ? 'slider' : 'buttons'}">
-                        <span class="item-name">${it.name}<span> / ${it.unit}</span></span>
+                        <span class="item-name">${it.name}${unitHtml}</span>
                         ${isSlider ? renderSlider(it) : renderButtons(it)}
                     </div>
                 `;
