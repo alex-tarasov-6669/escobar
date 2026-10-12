@@ -139,6 +139,11 @@
         const tg = window.Telegram.WebApp;
         tg.expand();
 
+        // Compact payload v2: Telegram WebApp.sendData accepts at most 4096 bytes.
+        // Full product names pushed the form over that limit after the latest stock additions.
+        const STOCK_PAYLOAD_VERSION = 2;
+        const TELEGRAM_SEND_DATA_LIMIT = 4096;
+
         const sliderConfigs = {
             "Сир Голандский": {
                 min: 0, max: 4, step: 1,
@@ -710,6 +715,13 @@
             return { v: "не вказано", s: -1 };
         }
 
+        function utf8ByteLength(text) {
+            if (typeof TextEncoder !== 'undefined') {
+                return new TextEncoder().encode(text).length;
+            }
+            return unescape(encodeURIComponent(text)).length;
+        }
+
         function submitData() {
             updateSubmitState();
 
@@ -718,18 +730,31 @@
                 return;
             }
 
-            const res = {};
-
+            // Передаємо лише [value, status] у тому самому порядку, що й schema.
+            // Назви товарів відновлює бот по STOCK_SCHEMA. Це залишає великий запас
+            // до Telegram-ліміту 4096 байт навіть при подальшому розширенні форми.
+            const rows = [];
             document.querySelectorAll('.item').forEach(it => {
-                if (it.dataset.inputType === 'slider') {
-                    res[it.dataset.name] = buildSliderPayload(it);
-                } else {
-                    res[it.dataset.name] = buildButtonsPayload(it);
-                }
+                const value = it.dataset.inputType === 'slider'
+                    ? buildSliderPayload(it)
+                    : buildButtonsPayload(it);
+                rows.push([value.v, value.s]);
             });
 
-            tg.sendData(JSON.stringify(res));
-            tg.close();
+            const payload = JSON.stringify({ v: STOCK_PAYLOAD_VERSION, d: rows });
+            const payloadBytes = utf8ByteLength(payload);
+            if (payloadBytes > TELEGRAM_SEND_DATA_LIMIT) {
+                tg.showAlert(`Помилка: пакет залишків завеликий (${payloadBytes} байт). Зверніться до адміністратора.`);
+                return;
+            }
+
+            try {
+                tg.sendData(payload);
+                tg.close();
+            } catch (err) {
+                console.error("stock sendData failed", err);
+                tg.showAlert("Не вдалося відправити залишки. Закрийте форму, відкрийте її знову та повторіть спробу.");
+            }
         }
 
         updateSubmitState();
